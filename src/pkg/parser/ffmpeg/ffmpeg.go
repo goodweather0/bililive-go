@@ -128,7 +128,7 @@ func (p *Parser) ParseLiveStream(url *url.URL, live live.Live, file string) (err
 		"ffmpeg",
 		"-loglevel", "warning",
 		"-y", "-re",
-		"-user_agent", userAgent,
+		"-user_agent", ua,
 		"-i", url.String(),
 		"-c", "copy",
 		"-bsf:a", "aac_adtstoasc",
