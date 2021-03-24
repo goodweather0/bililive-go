@@ -119,14 +119,16 @@ func (p *Parser) Status() (map[string]string, error) {
 }
 
 func (p *Parser) ParseLiveStream(url *url.URL, live live.Live, file string) (err error) {
+	ua := userAgent
+	ua = strings.Replace(ua, `(`, `\(`, -1)
+	ua = strings.Replace(ua, `)`, `\)`, -1)
+	ua = fmt.Sprintf(`'%s -referer %s -timeout %d'`, ua, live.GetRawUrl(), 60000000)
+
 	p.cmd = exec.Command(
 		"ffmpeg",
-		"-nostats",
-		"-progress", "-",
+		"-loglevel", "warning",
 		"-y", "-re",
 		"-user_agent", userAgent,
-		"-referer", live.GetRawUrl(),
-		"-timeout", "60000000",
 		"-i", url.String(),
 		"-c", "copy",
 		"-bsf:a", "aac_adtstoasc",
